@@ -17,26 +17,30 @@ namespace CSharpLinter
 
         public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
         {
-            if (typeDeclaration.HasModifier(Modifiers.Public))
+            if (!typeDeclaration.HasModifier(Modifiers.Public) ||
+                this.Results.FileName.ToLower() == "global.asax.cs")
             {
-                this.m_TotalClasses++;
-                if (this.m_TotalClasses > 1)
+                base.VisitTypeDeclaration(typeDeclaration);
+                return;
+            }
+
+            this.m_TotalClasses++;
+            if (this.m_TotalClasses > 1)
+            {
+                this.Results.Issues.Add(new LintIssue
                 {
-                    this.Results.Issues.Add(new LintIssue
-                    {
-                        LineNumber = typeDeclaration.StartLocation.Line,
-                        Index = LintIssueIndex.MoreThanOneClassInFile,
-                        Parameters = new[] 
-                        { 
-                            typeDeclaration.Name,
-                            this.m_FirstClassName
-                        }
-                    });
-                }
-                else
-                {
-                    this.m_FirstClassName = typeDeclaration.Name;
-                }
+                    LineNumber = typeDeclaration.StartLocation.Line,
+                    Index = LintIssueIndex.MoreThanOneClassInFile,
+                    Parameters = new[] 
+                    { 
+                        typeDeclaration.Name,
+                        this.m_FirstClassName
+                    }
+                });
+            }
+            else
+            {
+                this.m_FirstClassName = typeDeclaration.Name;
             }
 
             var parent = typeDeclaration.GetParent<TypeDeclaration>();
