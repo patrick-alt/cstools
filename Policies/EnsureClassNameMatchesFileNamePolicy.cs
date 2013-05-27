@@ -31,8 +31,8 @@ namespace CSharpLinter
                 {
                     LineNumber = typeDeclaration.StartLocation.Line,
                     Index = LintIssueIndex.MoreThanOneClassInFile,
-                    Parameters = new[] 
-                    { 
+                    Parameters = new[]
+                    {
                         typeDeclaration.Name,
                         this.m_FirstClassName
                     }
@@ -50,8 +50,8 @@ namespace CSharpLinter
                 {
                     LineNumber = typeDeclaration.StartLocation.Line,
                     Index = LintIssueIndex.PublicNestedClassDefined,
-                    Parameters = new[] 
-                    { 
+                    Parameters = new[]
+                    {
                         typeDeclaration.Name
                     }
                 });
@@ -67,8 +67,8 @@ namespace CSharpLinter
                 {
                     LineNumber = typeDeclaration.StartLocation.Line,
                     Index = LintIssueIndex.ClassNameDoesNotMatchFileName,
-                    Parameters = new[] 
-                    { 
+                    Parameters = new[]
+                    {
                         typeDeclaration.Name,
                         filename
                     }
