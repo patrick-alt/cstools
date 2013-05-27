@@ -45,6 +45,7 @@
       <HintPath>packages\ICSharpCode.NRefactory.5.3.0\lib\Net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -54,6 +55,11 @@
     <Compile Include="LintResults.cs" />
     <Compile Include="Policies\EnsureClassNameMatchesFileNamePolicy.cs" />
     <Compile Include="LintIssueIndex.cs" />
+    <Compile Include="Policies\EnsureNoNestedPublicClassesPolicy.cs" />
+    <Compile Include="Policies\EnsureOnePublicClassPerFilePolicy.cs" />
+    <Compile Include="Policies\UseImplicitVariableTypeInDeclarationPolicy.cs" />
+    <Compile Include="Policies\ConsoleWriteUsedOutsideOfProgramMainPolicy.cs" />
+    <Compile Include="LintSeverity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
