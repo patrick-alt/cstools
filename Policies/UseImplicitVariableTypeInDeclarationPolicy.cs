@@ -33,7 +33,7 @@ namespace CSharpLinter
                 var initializer = match.Get<Expression>("initializer").Single();
 
                 // FIXME: Is there a better way to test to see if the original type was 'var'?
-                if (type.ToString() == "var")
+                if (type.ToString() == "var" || type.ToString() == "dynamic")
                     return;
 
                 // FIXME: Is there a better way to detect if the initializer is untyped?
