@@ -40,6 +40,11 @@ namespace CSharpLinter
                 if (initializer.ToString() == "null")
                     return;
 
+                // FIXME: Is there a better way to detect lambdas?
+                if (initializer.ToString().Contains("=>") &&
+                    !initializer.ToString().Trim().StartsWith("new"))
+                    return;
+
                 /*var original = variableDeclarationStatement.ToString();
                 var replacementNode = variableDeclarationStatement.Clone();
                 var replacementMatch = this.m_Pattern.Match(replacementNode);
