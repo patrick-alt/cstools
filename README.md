@@ -33,4 +33,37 @@ mono --debug ~/Projects/Redpoint/CSharpLinter/cscover/bin/Debug/cscover.exe -o r
 
 In this case, it outputs the report to `report.xml` by running `/usr/bin/mono` with the specified arguments (-a), in the specified working directory (-w).  It copies the `cscover.exe` and `cslib.dll` to the --copy-to directory before running the command (instrumented assemblies depend on these two files).  Finally, all files matching `Tychaia\*.dll` are instrumented (this can just be a generic list of assemblies).
 
-Note that the list of results in the report are not guarenteed to only be unique values.  Thus long-running commands and tests can result in large reports.  You'll want the program or script consuming `report.xml` to convert the results to a unique list before attempting to calculate metrics.
+cscover produces a report like this:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<report>
+  <total>144</total>
+  <instrumented start="16" end="16" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="17" end="17" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="18" end="18" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="19" end="19" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="22" end="22" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="23" end="23" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="24" end="24" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="27" end="27" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="28" end="28" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="29" end="29" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="30" end="30" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  <instrumented start="31" end="31" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultArrayPool.cs" />
+  ...
+  <instrumented start="19" end="19" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/TychaiaGlobalIoCModule.cs" />
+  <instrumented start="20" end="20" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/TychaiaGlobalIoCModule.cs" />
+  <executed start="12" end="12" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="14" end="14" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="15" end="15" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="12" end="12" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultChunkSizePolicy.cs" />
+  <executed start="27" end="27" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultChunkSizePolicy.cs" />
+  <executed start="16" end="16" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="19" end="19" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="20" end="20" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+  <executed start="21" end="21" file="/home/james/Projects/Redpoint/Tychaia/Tychaia.Globals/Implementations/DefaultPositionScaleTranslation.cs" />
+</report>
+```
+
+`total` is the total lines that have been instrumented, while the `instrumented` and `executed` elements detail exactly what lines have been instrumented and which lines have been executed during program execution.

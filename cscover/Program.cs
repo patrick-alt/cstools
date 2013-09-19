@@ -85,6 +85,8 @@ namespace cscover
             }
             
             var trackTemp = Path.GetTempFileName();
+            int total = 0;
+            var instrumented = new List<ReportLine>();
             
             try
             {
@@ -100,10 +102,12 @@ namespace cscover
                     // Instrument the assembly for execution.
                     Console.WriteLine("Instrumenting " + assemblyFile);
                     var assembly = AssemblyDefinition.ReadAssembly(assemblyFile + ".bak", new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") });
-                    instrumenter.InstrumentAssembly(
+                    total += instrumenter.InstrumentAssembly(
                         assembly,
                         typeof(InstrumentationEndpoint).GetMethod("Invoke", BindingFlags.Public | BindingFlags.Static),
-                        trackTemp);
+                        trackTemp,
+                        (start, end, document) => 
+                            instrumented.Add(new ReportLine { StartLine = start, EndLine = end, Document = document }));
                     assembly.Write(assemblyFile);
                 }
                 
@@ -138,10 +142,26 @@ namespace cscover
                 using (var writer = XmlWriter.Create(output, new XmlWriterSettings { Indent = true }))
                 {
                     writer.WriteStartElement("report");
+                    writer.WriteStartElement("total");
+                    writer.WriteString(total.ToString());
+                    writer.WriteEndElement();
+                    foreach (var instrument in instrumented)
+                    {
+                        writer.WriteStartElement("instrumented");
+                        writer.WriteAttributeString("start", instrument.StartLine.ToString());
+                        writer.WriteAttributeString("end", instrument.EndLine.ToString());
+                        writer.WriteAttributeString("file", instrument.Document);
+                        writer.WriteEndElement();
+                    }
+                    var unique = new List<string>();
                     while (!reader.EndOfStream)
                     {
                         var entry = reader.ReadLine().Split(new[] { ' ' }, 3);
-                        writer.WriteStartElement("line");
+                        var hash = entry[2] + ":" + entry[0] + "-" + entry[1];
+                        if (unique.Contains(hash))
+                            continue;
+                        unique.Add(hash);
+                        writer.WriteStartElement("executed");
                         writer.WriteAttributeString("start", entry[0]);
                         writer.WriteAttributeString("end", entry[1]);
                         writer.WriteAttributeString("file", entry[2]);
