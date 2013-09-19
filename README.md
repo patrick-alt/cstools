@@ -1,13 +1,10 @@
-cstools
-=========
+# cstools
 
-cslint
----------
+## cslint
 
 cslint is a C# linting tool that checks for common issues in C# code and then outputs the results as a JSON object.
 
-Policies
-~~~~~~~~~~~~
+### Policies
 
 The following policies are defined in cslint.  At the moment cslint doesn't have a way of configuring which policies are enabled, so the best option is to comment out each of the policy checkers that you want disabled and rebuild cslint.  Policies that are marked with a **[!]** also have automatic fixes suggested.  When using cslint with Arcanist you'll be prompted to automatically correct the issue.
 
@@ -17,13 +14,13 @@ The following policies are defined in cslint.  At the moment cslint doesn't have
   * Use 'var' for implicit declarations **[!]**
   * Don't use Console.Write\* outside of program's main entry point
 
-csunit
-----------
+## csunit
 
 csunit is a C# unit testing tool.  It's a generic interface to various unit test frameworks and is capable of executing various runners over multiple assemblies and combining the result.  This is useful if your unit test suite is spread across multiple unit test frameworks.
 
-cscover
-----------
+csunit is not yet developed.
+
+## cscover
 
 cscover is a code coverage tool.  It instruments (rewrites) a list of assemblies and executes a command, producing an XML report of all lines of code executed in the instrumented assemblies.
 
