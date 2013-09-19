@@ -3,9 +3,9 @@ using ICSharpCode.NRefactory.CSharp;
 
 namespace CSharpLinter
 {
-    public class EnsureClassNameMatchesFileNamePolicy : LintPolicy
+    public class EnsureNoNestedPublicClassesPolicy : LintPolicy
     {
-        public EnsureClassNameMatchesFileNamePolicy(LintResults results)
+        public EnsureNoNestedPublicClassesPolicy(LintResults results)
             : base(results)
         {
         }
@@ -18,19 +18,15 @@ namespace CSharpLinter
                 return;
             }
 
-            var idx = this.Results.FileName.LastIndexOf('.');
-            var filename = this.Results.FileName;
-            if (idx != -1)
-                filename = filename.Substring(0, idx);
-            if (typeDeclaration.Name != filename)
+            var parent = typeDeclaration.GetParent<TypeDeclaration>();
+            if (parent != null && typeDeclaration.HasModifier(Modifiers.Public))
             {
                 this.Results.Issues.Add(new LintIssue(typeDeclaration)
                 {
-                    Index = LintIssueIndex.ClassNameDoesNotMatchFileName,
+                    Index = LintIssueIndex.PublicNestedClassDefined,
                     Parameters = new[]
                     {
-                        typeDeclaration.Name,
-                        filename
+                        typeDeclaration.Name
                     }
                 });
             }

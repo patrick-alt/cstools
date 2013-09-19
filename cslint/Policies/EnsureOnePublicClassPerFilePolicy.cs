@@ -3,11 +3,16 @@ using ICSharpCode.NRefactory.CSharp;
 
 namespace CSharpLinter
 {
-    public class EnsureClassNameMatchesFileNamePolicy : LintPolicy
+    public class EnsureOnePublicClassPerFilePolicy : LintPolicy
     {
-        public EnsureClassNameMatchesFileNamePolicy(LintResults results)
+        private int m_TotalClasses;
+        private string m_FirstClassName;
+
+        public EnsureOnePublicClassPerFilePolicy(LintResults results)
             : base(results)
         {
+            this.m_TotalClasses = 0;
+            this.m_FirstClassName = null;
         }
 
         public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
@@ -18,21 +23,22 @@ namespace CSharpLinter
                 return;
             }
 
-            var idx = this.Results.FileName.LastIndexOf('.');
-            var filename = this.Results.FileName;
-            if (idx != -1)
-                filename = filename.Substring(0, idx);
-            if (typeDeclaration.Name != filename)
+            this.m_TotalClasses++;
+            if (this.m_TotalClasses > 1)
             {
                 this.Results.Issues.Add(new LintIssue(typeDeclaration)
                 {
-                    Index = LintIssueIndex.ClassNameDoesNotMatchFileName,
+                    Index = LintIssueIndex.MoreThanOneClassInFile,
                     Parameters = new[]
                     {
                         typeDeclaration.Name,
-                        filename
+                        this.m_FirstClassName
                     }
                 });
+            }
+            else
+            {
+                this.m_FirstClassName = typeDeclaration.Name;
             }
 
             base.VisitTypeDeclaration(typeDeclaration);
