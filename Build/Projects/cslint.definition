@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Name="cslint" Path="cslint" Type="Console">
+  <References>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Ninject" />
+    <Reference Include="cslib" />
+  </References>
+  <Files>
+    <Compile Include="LintIssue.cs" />
+    <Compile Include="LintIssueIndex.cs" />
+    <Compile Include="LintPolicy.cs" />
+    <Compile Include="LintResults.cs" />
+    <Compile Include="Policies\EnsureClassNameMatchesFileNamePolicy.cs" />
+    <Compile Include="Program.cs" />
+    <None Include="packages.config" />
+  </Files>
+</Project>

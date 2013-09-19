@@ -1,7 +1,7 @@
 using System;
 using ICSharpCode.NRefactory.CSharp;
+using Newtonsoft.Json;
 using System.IO;
-using System.Web.Script.Serialization;
 
 namespace CSharpLinter
 {
@@ -22,8 +22,7 @@ namespace CSharpLinter
             // Apply policies
             tree.AcceptVisitor(new EnsureClassNameMatchesFileNamePolicy(results));
 
-            var serializer = new JavaScriptSerializer();
-            Console.Write(serializer.Serialize(results));
+            Console.Write(JsonConvert.SerializeObject(results));
         }
     }
 }

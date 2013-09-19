@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cslint", "CSharpLinter\cslint.csproj", "{3D8B0C12-81C8-4D46-8EDD-309CF41EAC18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cslint", "cslint\cslint.csproj", "{3D8B0C12-81C8-4D46-8EDD-309CF41EAC18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cscover", "cscover\cscover.csproj", "{6BB6412A-7E7B-42F7-A532-ECD355D7577C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,8 +15,12 @@ Global
 		{3D8B0C12-81C8-4D46-8EDD-309CF41EAC18}.Debug|x86.Build.0 = Debug|x86
 		{3D8B0C12-81C8-4D46-8EDD-309CF41EAC18}.Release|x86.ActiveCfg = Release|x86
 		{3D8B0C12-81C8-4D46-8EDD-309CF41EAC18}.Release|x86.Build.0 = Release|x86
+		{6BB6412A-7E7B-42F7-A532-ECD355D7577C}.Debug|x86.ActiveCfg = Debug|x86
+		{6BB6412A-7E7B-42F7-A532-ECD355D7577C}.Debug|x86.Build.0 = Debug|x86
+		{6BB6412A-7E7B-42F7-A532-ECD355D7577C}.Release|x86.ActiveCfg = Release|x86
+		{6BB6412A-7E7B-42F7-A532-ECD355D7577C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = CSharpLinter\cslint.csproj
+		StartupItem = cslint\cslint.csproj
 	EndGlobalSection
 EndGlobal

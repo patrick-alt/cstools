@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Name="cslib" Path="cslib" Type="Library">
+  <References>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Ninject" />
+  </References>
+  <Files>
+    <Compile Include="CSharpLibraryNinjectModule.cs" />
+    <Compile Include="Implementations\DefaultInstrumenter.cs" />
+    <Compile Include="Services\IInstrumenter.cs" />
+    <None Include="packages.config" />
+  </Files>
+</Project>

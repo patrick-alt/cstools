@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Name="csunit" Path="csunit" Type="Console">
+  <References>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Ninject" />
+    <Reference Include="cslib" />
+  </References>
+  <Files>
+    <Compile Include="Program.cs" />
+  </Files>
+</Project>

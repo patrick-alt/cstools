@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Name="cscover" Path="cscover" Type="Console">
+  <References>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Ninject" />
+    <Reference Include="cslib" />
+  </References>
+  <Files>
+    <Compile Include="InstrumentationEndpoint.cs" />
+    <Compile Include="Program.cs" />
+    <None Include="packages.config" />
+  </Files>
+</Project>
