@@ -1,18 +1,20 @@
-using System;
+using System.IO;
 
 namespace cscover
 {
     public static class InstrumentationEndpoint
     {
-        public static void Invoke(string info)
+        private static object _lock = new object();
+    
+        public static void Invoke(string output, string methodFullName, string document, string startLine, string endLine)
         {
-            Console.WriteLine(string.IsNullOrEmpty(info));
-            //Console.WriteLine(info);
-            //methodFullName = methodFullName ?? "";
-            //document = document ?? "";
-            //startLine = startLine ?? "";
-            //endLine = endLine ?? "";
-            //Console.WriteLine("Entered " + methodFullName + " in " + document + ":" + startLine + "-" + endLine);
+            lock (_lock)
+            {
+                using (var writer = new StreamWriter(output, true))
+                {
+                    writer.WriteLine(startLine + " " + endLine + " " + document);
+                }
+            }
         }
     }
 }

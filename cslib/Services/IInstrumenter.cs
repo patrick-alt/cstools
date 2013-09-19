@@ -5,7 +5,7 @@ namespace cslib
 {
     public interface IInstrumenter
     {
-        void InstrumentAssembly(AssemblyDefinition assembly, MethodInfo endpoint);
+        void InstrumentAssembly(AssemblyDefinition assembly, MethodInfo endpoint, string output);
     }
 }
 
