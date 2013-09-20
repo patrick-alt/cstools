@@ -93,22 +93,29 @@ namespace cscover
                 var instrumenter = kernel.Get<IInstrumenter>();
                 foreach (var assemblyFile in extra)
                 {
-                    // Backup the original assembly.
-                    Console.WriteLine("Backing up " + assemblyFile);
-                    File.Move(assemblyFile, assemblyFile + ".bak");
-                    if (File.Exists(assemblyFile + ".mdb"))
-                        File.Move(assemblyFile + ".mdb", assemblyFile + ".bak.mdb");
-                    
-                    // Instrument the assembly for execution.
-                    Console.WriteLine("Instrumenting " + assemblyFile);
-                    var assembly = AssemblyDefinition.ReadAssembly(assemblyFile + ".bak", new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") });
-                    total += instrumenter.InstrumentAssembly(
-                        assembly,
-                        typeof(InstrumentationEndpoint).GetMethod("Invoke", BindingFlags.Public | BindingFlags.Static),
-                        trackTemp,
-                        (start, end, document) => 
-                            instrumented.Add(new ReportLine { StartLine = start, EndLine = end, Document = document }));
-                    assembly.Write(assemblyFile);
+                    try
+                    {
+                        // Backup the original assembly.
+                        Console.WriteLine("Backing up " + assemblyFile);
+                        File.Move(assemblyFile, assemblyFile + ".bak");
+                        if (File.Exists(assemblyFile + ".mdb"))
+                            File.Move(assemblyFile + ".mdb", assemblyFile + ".bak.mdb");
+                        
+                        // Instrument the assembly for execution.
+                        Console.WriteLine("Instrumenting " + assemblyFile);
+                        var assembly = AssemblyDefinition.ReadAssembly(assemblyFile + ".bak", new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") });
+                        total += instrumenter.InstrumentAssembly(
+                            assembly,
+                            typeof(InstrumentationEndpoint).GetMethod("Invoke", BindingFlags.Public | BindingFlags.Static),
+                            trackTemp,
+                            (start, end, document) => 
+                                instrumented.Add(new ReportLine { StartLine = start, EndLine = end, Document = document }));
+                        assembly.Write(assemblyFile);
+                    }
+                    catch (AssemblyResolutionException)
+                    {
+                        Console.WriteLine("Unable to instrument " + assemblyFile + " due to assembly resolution error");
+                    }
                 }
                 
                 // Execute the command.
