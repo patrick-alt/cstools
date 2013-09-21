@@ -10,7 +10,7 @@ namespace cslib
         /// Instruments the assembly.
         /// </summary>
         /// <returns>The number of instructions instrumented.</returns>
-        int InstrumentAssembly(AssemblyDefinition assembly, MethodInfo endpoint, string output, Action<int, int, string> instructionInstrumented);
+        int InstrumentAssembly(AssemblyDefinition assembly, string output, Action<int, int, string> instructionInstrumented);
     }
 }
 

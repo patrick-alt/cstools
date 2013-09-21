@@ -31,8 +31,7 @@ namespace cscover
                 { "c|command=", v => command = v },
                 { "a|args=", v => commandArgs = v },
                 { "w|work-dir=", v => workDir = v },
-                { "h|help", v => help = true },
-                { "copy-to=", v => copyTo = v }
+                { "h|help", v => help = true }
             };
             
             List<string> extra;
@@ -70,20 +69,6 @@ namespace cscover
                 return;
             }
             
-            if (copyTo != null)
-            {
-                var cscoverAssembly = typeof(Program).Assembly.Location;
-                var cslibAssembly = typeof(IInstrumenter).Assembly.Location;
-                if (string.IsNullOrEmpty(cscoverAssembly) || string.IsNullOrEmpty(cslibAssembly))
-                {
-                    Console.WriteLine("Failed to copy cscover or cslib to target directory.");
-                    return;
-                }
-                File.Copy(cscoverAssembly, Path.Combine(copyTo, "cscover.exe"), true);
-                File.Copy(cslibAssembly, Path.Combine(copyTo, "cslib.dll"), true);
-                Console.WriteLine("Copied dependencies to " + copyTo);
-            }
-            
             var trackTemp = Path.GetTempFileName();
             int total = 0;
             var instrumented = new List<ReportLine>();
@@ -112,11 +97,14 @@ namespace cscover
                         var assembly = AssemblyDefinition.ReadAssembly(assemblyFile + ".bak", new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") });
                         total += instrumenter.InstrumentAssembly(
                             assembly,
-                            typeof(InstrumentationEndpoint).GetMethod("Invoke", BindingFlags.Public | BindingFlags.Static),
                             trackTemp,
                             (start, end, document) => 
                                 instrumented.Add(new ReportLine { StartLine = start, EndLine = end, Document = document }));
                         assembly.Write(assemblyFile);
+                    }
+                    catch (ApplicationException ex)
+                    {
+                        Console.WriteLine("Unable to instrument " + assemblyFile + " because " + ex.Message);
                     }
                     catch (AssemblyResolutionException)
                     {
@@ -144,8 +132,12 @@ namespace cscover
                     Console.WriteLine("Restoring " + assemblyFile);
                     File.Delete(assemblyFile);
                     File.Move(assemblyFile + ".bak", assemblyFile);
-                    if (File.Exists(assemblyFile + ".bak.mdb"))
-                        File.Move(assemblyFile + ".bak.mdb", assemblyFile + ".mdb");
+                    try
+                    {
+                        if (File.Exists(assemblyFile + ".bak.mdb"))
+                            File.Move(assemblyFile + ".bak.mdb", assemblyFile + ".mdb");
+                    }
+                    catch (IOException) { }
                 }
             }
             
