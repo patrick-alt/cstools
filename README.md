@@ -27,10 +27,10 @@ cscover is a code coverage tool.  It instruments (rewrites) a list of assemblies
 You can use cscover with something like the following command:
 
 ```
-mono --debug ~/Projects/Redpoint/CSharpLinter/cscover/bin/Debug/cscover.exe -o report.xml -c /usr/bin/mono -a "/home/james/Projects/Redpoint/Tychaia/packages/xunit.runners.1.9.1/tools/xunit.console.clr4.exe Tychaia.Globals.Tests.dll" -w "$(pwd)" --copy-to="$(pwd)" Tychaia*.dll
+mono --debug ~/Projects/Redpoint/CSharpLinter/cscover/bin/Debug/cscover.exe -o report.xml -c /usr/bin/mono -a "/home/james/Projects/Redpoint/Tychaia/packages/xunit.runners.1.9.1/tools/xunit.console.clr4.exe Tychaia.Globals.Tests.dll" -w "$(pwd)" Tychaia*.dll
 ```
 
-In this case, it outputs the report to `report.xml` by running `/usr/bin/mono` with the specified arguments (-a), in the specified working directory (-w).  It copies the `cscover.exe` and `cslib.dll` to the --copy-to directory before running the command (instrumented assemblies depend on these two files).  Finally, all files matching `Tychaia\*.dll` are instrumented (this can just be a generic list of assemblies).
+In this case, it outputs the report to `report.xml` by running `/usr/bin/mono` with the specified arguments (-a), in the specified working directory (-w).  Finally, all files matching `Tychaia\*.dll` are instrumented (this can just be a generic list of assemblies).
 
 cscover produces a report like this:
 
