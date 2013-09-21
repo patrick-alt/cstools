@@ -97,9 +97,15 @@ namespace cscover
                     {
                         // Backup the original assembly.
                         Console.WriteLine("Backing up " + assemblyFile);
+                        if (File.Exists(assemblyFile + ".bak"))
+                            File.Delete(assemblyFile + ".bak");
                         File.Move(assemblyFile, assemblyFile + ".bak");
                         if (File.Exists(assemblyFile + ".mdb"))
+                        {
+                            if (File.Exists(assemblyFile + ".bak.mdb"))
+                                File.Delete(assemblyFile + ".bak.mdb");
                             File.Move(assemblyFile + ".mdb", assemblyFile + ".bak.mdb");
+                        }
                         
                         // Instrument the assembly for execution.
                         Console.WriteLine("Instrumenting " + assemblyFile);
