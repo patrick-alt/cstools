@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using cslib;
 using NDesk.Options;
 using Newtonsoft.Json;
 using Ninject;
-using cslib;
 
 namespace cslint
 {
@@ -14,7 +15,7 @@ namespace cslint
         {
             var kernel = new StandardKernel();
             kernel.Load<CSharpLibraryNinjectModule>();
-            
+
             string file = null;
             string settings = null;
             string root = null;
@@ -22,10 +23,12 @@ namespace cslint
             var options = new OptionSet
             {
                 { "s|settings=", v => settings = v },
+                { "settings-base64=", v => settings = 
+                    Encoding.ASCII.GetString(Convert.FromBase64String(v)) },
                 { "r|root=", v => root = v },
                 { "h|help", v => help = true }
             };
-            
+
             List<string> extra;
             try
             {
@@ -38,18 +41,18 @@ namespace cslint
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
-            
+
             if (help)
             {
                 ShowHelp(options);
                 return;
             }
-            
+
             if (extra.Count > 0)
             {
                 file = extra[0];
             }
-            
+
             if (extra.Count > 1)
             {
                 Console.Write("cslint: ");
@@ -57,7 +60,7 @@ namespace cslint
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(file))
             {
                 Console.Write("cslint: ");
@@ -65,7 +68,7 @@ namespace cslint
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
-            
+
             if (!File.Exists(file))
             {
                 Console.Write("cslint: ");
@@ -73,27 +76,27 @@ namespace cslint
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
-            
+
             var settingsJson = new JsonSettings(settings);
             kernel.Bind<ISettings>().ToMethod(x => settingsJson);
-            
+
             var results = new LintResults();
             results.FileName = new FileInfo(file).FullName;
             results.BaseName = new FileInfo(file).Name;
-            
+
             if (root != null && Directory.Exists(root))
                 Directory.SetCurrentDirectory(root);
-            
+
             if (results.FileName.StartsWith(Environment.CurrentDirectory))
                 results.FileName = results.FileName.Substring(Environment.CurrentDirectory.Length + 1);
-            
+
             var linters = kernel.GetAll<ILinter>();
             foreach (var linter in linters)
                 linter.Process(results);
 
             Console.Write(JsonConvert.SerializeObject(results));
         }
-        
+
         private static string GetRelativePath(string filespec, string folder)
         {
             Uri pathUri = new Uri(filespec);
