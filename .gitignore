@@ -111,3 +111,4 @@ UpgradeLog*.XML
 # Generate projects and solutions
 *.csproj
 *.sln
+cs*.nuspec
