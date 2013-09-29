@@ -1,4 +1,4 @@
-namespace CSharpLinter
+namespace cslib
 {
     public enum LintSeverity
     {

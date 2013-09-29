@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ExternalProject Name="StyleCop">
+
+  <Binary
+    Name="StyleCop"
+    Path="StyleCop/StyleCop.dll" />
+  <Binary
+    Name="StyleCop.CSharp"
+    Path="StyleCop/StyleCop.CSharp.dll" />
+  <Binary
+    Name="StyleCop.CSharp.Rules"
+    Path="StyleCop/StyleCop.CSharp.Rules.dll" />
+
+</ExternalProject>

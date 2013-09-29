@@ -3,13 +3,35 @@
   <References>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Ninject" />
+    <Reference Include="StyleCop" />
   </References>
   <Files>
     <Compile Include="CSharpLibraryNinjectModule.cs" />
+    <Compile Include="Implementations\BuiltinLinter.cs" />
     <Compile Include="Implementations\DefaultInstrumenter.cs" />
+    <Compile Include="Implementations\DefaultProjectDiscovery.cs" />
+    <Compile Include="Implementations\JsonSettings.cs" />
+    <Compile Include="Implementations\StyleCopLinter.cs" />
+    <Compile Include="LintPolicies\ConsoleWriteUsedOutsideOfProgramMainPolicy.cs" />
+    <Compile Include="LintPolicies\EnsureClassNameMatchesFileNamePolicy.cs" />
+    <Compile Include="LintPolicies\EnsureNoNestedPublicClassesPolicy.cs" />
+    <Compile Include="LintPolicies\EnsureOnePublicClassPerFilePolicy.cs" />
+    <Compile Include="LintPolicies\LintPolicy.cs" />
+    <Compile Include="LintPolicies\UseImplicitVariableTypeInDeclarationPolicy.cs" />
+    <Compile Include="Models\DiscoveredProject.cs" />
+    <Compile Include="Models\DiscoveredSourceFile.cs" />
+    <Compile Include="Models\LintIssue.cs" />
+    <Compile Include="Models\LintIssueIndex.cs" />
+    <Compile Include="Models\LintResults.cs" />
+    <Compile Include="Models\LintSeverity.cs" />
     <Compile Include="Services\IInstrumenter.cs" />
+    <Compile Include="Services\ILinter.cs" />
+    <Compile Include="Services\IProjectDiscovery.cs" />
+    <Compile Include="Services\ISettings.cs" />
     <None Include="packages.config" />
   </Files>
 </Project>

@@ -5,19 +5,10 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Ninject" />
+    <Reference Include="StyleCop" />
     <Reference Include="cslib" />
   </References>
   <Files>
-    <Compile Include="LintIssue.cs" />
-    <Compile Include="LintIssueIndex.cs" />
-    <Compile Include="LintPolicy.cs" />
-    <Compile Include="LintResults.cs" />
-    <Compile Include="LintSeverity.cs" />
-    <Compile Include="Policies\ConsoleWriteUsedOutsideOfProgramMainPolicy.cs" />
-    <Compile Include="Policies\EnsureClassNameMatchesFileNamePolicy.cs" />
-    <Compile Include="Policies\EnsureNoNestedPublicClassesPolicy.cs" />
-    <Compile Include="Policies\EnsureOnePublicClassPerFilePolicy.cs" />
-    <Compile Include="Policies\UseImplicitVariableTypeInDeclarationPolicy.cs" />
     <Compile Include="Program.cs" />
     <None Include="packages.config" />
   </Files>

@@ -1,9 +1,9 @@
 using System;
+using System.Linq;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.PatternMatching;
-using System.Linq;
 
-namespace CSharpLinter
+namespace cslib
 {
     public class ConsoleWriteUsedOutsideOfProgramMainPolicy : LintPolicy
     {

@@ -1,7 +1,6 @@
-using System;
 using ICSharpCode.NRefactory.CSharp;
 
-namespace CSharpLinter
+namespace cslib
 {
     public class EnsureOnePublicClassPerFilePolicy : LintPolicy
     {

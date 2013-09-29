@@ -1,7 +1,6 @@
-using System;
 using ICSharpCode.NRefactory.CSharp;
 
-namespace CSharpLinter
+namespace cslib
 {
     public class LintIssue
     {
@@ -16,7 +15,7 @@ namespace CSharpLinter
         {
             this.Parameters = new string[0];
         }
-
+        
         public LintIssue(AstNode node)
             : this()
         {

@@ -1,11 +1,10 @@
-using System;
 using ICSharpCode.NRefactory.CSharp;
 
-namespace CSharpLinter
+namespace cslib
 {
-    public class EnsureNoNestedPublicClassesPolicy : LintPolicy
+    public class EnsureClassNameMatchesFileNamePolicy : LintPolicy
     {
-        public EnsureNoNestedPublicClassesPolicy(LintResults results)
+        public EnsureClassNameMatchesFileNamePolicy(LintResults results)
             : base(results)
         {
         }
@@ -18,15 +17,19 @@ namespace CSharpLinter
                 return;
             }
 
-            var parent = typeDeclaration.GetParent<TypeDeclaration>();
-            if (parent != null && typeDeclaration.HasModifier(Modifiers.Public))
+            var idx = this.Results.BaseName.LastIndexOf('.');
+            var filename = this.Results.BaseName;
+            if (idx != -1)
+                filename = filename.Substring(0, idx);
+            if (typeDeclaration.Name != filename)
             {
                 this.Results.Issues.Add(new LintIssue(typeDeclaration)
                 {
-                    Index = LintIssueIndex.PublicNestedClassDefined,
+                    Index = LintIssueIndex.ClassNameDoesNotMatchFileName,
                     Parameters = new[]
                     {
-                        typeDeclaration.Name
+                        typeDeclaration.Name,
+                        filename
                     }
                 });
             }

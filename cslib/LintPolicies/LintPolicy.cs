@@ -1,6 +1,6 @@
 using ICSharpCode.NRefactory.CSharp;
 
-namespace CSharpLinter
+namespace cslib
 {
     public abstract class LintPolicy : DepthFirstAstVisitor
     {

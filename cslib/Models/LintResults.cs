@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 
-namespace CSharpLinter
+namespace cslib
 {
     public class LintResults
     {
         public List<LintIssue> Issues = new List<LintIssue>();
         public string FileName;
+        public string BaseName;
     }
 }
 
