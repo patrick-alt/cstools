@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using cslib;
 using NDesk.Options;
@@ -16,9 +17,9 @@ namespace cslint
             var kernel = new StandardKernel();
             kernel.Load<CSharpLibraryNinjectModule>();
 
-            string file = null;
             string settings = null;
             string root = null;
+            bool version = false;
             bool help = false;
             var options = new OptionSet
             {
@@ -26,13 +27,14 @@ namespace cslint
                 { "settings-base64=", v => settings = 
                     Encoding.ASCII.GetString(Convert.FromBase64String(v)) },
                 { "r|root=", v => root = v },
-                { "h|help", v => help = true }
+                { "h|help", v => help = true },
+                { "v|version", v => version = true }
             };
 
-            List<string> extra;
+            List<string> files;
             try
             {
-                extra = options.Parse(args);
+                files = options.Parse(args);
             }
             catch (OptionException e)
             {
@@ -42,37 +44,30 @@ namespace cslint
                 return;
             }
 
+            if (version)
+            {
+                Console.WriteLine("1");
+                return;
+            }
+
             if (help)
             {
                 ShowHelp(options);
                 return;
             }
 
-            if (extra.Count > 0)
-            {
-                file = extra[0];
-            }
-
-            if (extra.Count > 1)
+            if (files.Count == 0)
             {
                 Console.Write("cslint: ");
-                Console.WriteLine("You can only specify one file to lint.");
+                Console.WriteLine("You must supply at least one file to lint.");
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
 
-            if (string.IsNullOrEmpty(file))
+            if (!files.All(File.Exists))
             {
                 Console.Write("cslint: ");
-                Console.WriteLine("You must supply at the file to lint.");
-                Console.WriteLine("Try `cslint --help' for more information.");
-                return;
-            }
-
-            if (!File.Exists(file))
-            {
-                Console.Write("cslint: ");
-                Console.WriteLine("Unable to locate the file to lint on disk.");
+                Console.WriteLine("Unable to locate one or more files specified.");
                 Console.WriteLine("Try `cslint --help' for more information.");
                 return;
             }
@@ -80,21 +75,27 @@ namespace cslint
             var settingsJson = new JsonSettings(settings);
             kernel.Bind<ISettings>().ToMethod(x => settingsJson);
 
-            var results = new LintResults();
-            results.FileName = new FileInfo(file).FullName;
-            results.BaseName = new FileInfo(file).Name;
+            var allResults = new List<LintResults>();
+            foreach (var file in files)
+            {
+                var results = new LintResults();
+                results.FileName = new FileInfo(file).FullName;
+                results.BaseName = new FileInfo(file).Name;
 
-            if (root != null && Directory.Exists(root))
-                Directory.SetCurrentDirectory(root);
+                if (root != null && Directory.Exists(root))
+                    Directory.SetCurrentDirectory(root);
 
-            if (results.FileName.StartsWith(Environment.CurrentDirectory))
-                results.FileName = results.FileName.Substring(Environment.CurrentDirectory.Length + 1);
+                if (results.FileName.StartsWith(Environment.CurrentDirectory))
+                    results.FileName = results.FileName.Substring(Environment.CurrentDirectory.Length + 1);
 
-            var linters = kernel.GetAll<ILinter>();
-            foreach (var linter in linters)
-                linter.Process(results);
+                var linters = kernel.GetAll<ILinter>();
+                foreach (var linter in linters)
+                    linter.Process(results);
 
-            Console.Write(JsonConvert.SerializeObject(results));
+                allResults.Add(results);
+            }
+
+            Console.Write(JsonConvert.SerializeObject(allResults));
         }
 
         private static string GetRelativePath(string filespec, string folder)
