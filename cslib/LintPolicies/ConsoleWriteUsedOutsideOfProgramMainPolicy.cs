@@ -32,6 +32,11 @@ namespace cslib
                 {
                     // FIXME: Couldn't get a pattern matcher to work on the MethodDeclaration.
                     var declMethod = invocationExpression.GetParent<MethodDeclaration>();
+                    if (declMethod == null)
+                    {
+                        base.VisitInvocationExpression(invocationExpression);
+                        return;
+                    }
                     var allowed = (
                         declMethod.Name == "Main" &&
                         declMethod.Modifiers == (Modifiers.Public | Modifiers.Static) &&
