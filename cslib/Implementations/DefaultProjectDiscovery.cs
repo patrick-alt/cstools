@@ -19,14 +19,12 @@ namespace cslib
         public IEnumerable<DiscoveredProject> DiscoverProjects(string file)
         {
             dynamic patterns = this.m_Settings.Get();
-            Console.Error.WriteLine("Starting pattern match for " + file);
             foreach (var kv in patterns)
             {
                 var regexPattern = kv.Key;
                 var potentialRegexMatches = kv.Value;
                 if (!Regex.IsMatch(file, regexPattern))
                 {
-                    Console.Error.WriteLine(file + " does not match " + regexPattern);
                     continue;
                 }
                 foreach (var potentialRegexMatch in potentialRegexMatches)
@@ -38,8 +36,6 @@ namespace cslib
                             Path = result,
                             DiscoveredFiles = this.DiscoverFiles(result)
                         };
-                    else
-                        Console.Error.WriteLine(result + " does not exist on disk");
                 }
             }
         }
