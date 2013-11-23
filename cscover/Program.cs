@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Xml;
+using cslib;
 using Mono.Cecil;
 using NDesk.Options;
 using Ninject;
-using cslib;
-using System.Diagnostics;
-using System.Xml;
 
 namespace cscover
 {
@@ -18,7 +17,7 @@ namespace cscover
         {
             var kernel = new StandardKernel();
             kernel.Load<CSharpLibraryNinjectModule>();
-            
+
             string output = null;
             string command = null;
             string commandArgs = null;
@@ -33,7 +32,7 @@ namespace cscover
                 { "w|work-dir=", v => workDir = v },
                 { "h|help", v => help = true }
             };
-            
+
             List<string> extra;
             try
             {
@@ -46,13 +45,13 @@ namespace cscover
                 Console.WriteLine("Try `cscover --help' for more information.");
                 return;
             }
-            
+
             if (help)
             {
                 ShowHelp(options);
                 return;
             }
-            
+
             if (extra.Count == 0)
             {
                 Console.Write("cscover: ");
@@ -60,7 +59,7 @@ namespace cscover
                 Console.WriteLine("Try `cscover --help' for more information.");
                 return;
             }
-            
+
             if (extra.Any(x => !File.Exists(x)))
             {
                 Console.Write("cscover: ");
@@ -68,16 +67,18 @@ namespace cscover
                 Console.WriteLine("Try `cscover --help' for more information.");
                 return;
             }
-            
+
             var trackTemp = Path.GetTempFileName();
             int total = 0;
             var instrumented = new List<ReportLine>();
-            
+
             try
             {
                 var instrumenter = kernel.Get<IInstrumenter>();
                 foreach (var assemblyFile in extra)
                 {
+                    var assemblyFileWithoutExt = assemblyFile.Substring(0, assemblyFile.LastIndexOf("."));
+                    var assemblyExt = assemblyFile.Substring(assemblyFile.LastIndexOf(".") + 1);
                     try
                     {
                         // Backup the original assembly.
@@ -91,14 +92,22 @@ namespace cscover
                                 File.Delete(assemblyFile + ".bak.mdb");
                             File.Move(assemblyFile + ".mdb", assemblyFile + ".bak.mdb");
                         }
-                        
+                        if (File.Exists(assemblyFileWithoutExt + ".pdb"))
+                        {
+                            if (File.Exists(assemblyFileWithoutExt + "." + assemblyExt + ".pdb"))
+                                File.Delete(assemblyFileWithoutExt + "." + assemblyExt + ".pdb");
+                            File.Move(assemblyFileWithoutExt + ".pdb", assemblyFileWithoutExt + "." + assemblyExt + ".pdb");
+                        }
+
                         // Instrument the assembly for execution.
                         Console.WriteLine("Instrumenting " + assemblyFile);
-                        var assembly = AssemblyDefinition.ReadAssembly(assemblyFile + ".bak", new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") });
+                        var assembly = AssemblyDefinition.ReadAssembly(
+                            assemblyFile + ".bak",
+                            new ReaderParameters { ReadSymbols = File.Exists(assemblyFile + ".bak.mdb") || File.Exists(assemblyFileWithoutExt + "." + assemblyExt + ".pdb") });
                         total += instrumenter.InstrumentAssembly(
                             assembly,
                             trackTemp,
-                            (start, end, document) => 
+                            (start, end, document) =>
                                 instrumented.Add(new ReportLine { StartLine = start, EndLine = end, Document = document }));
                         assembly.Write(assemblyFile);
                     }
@@ -111,7 +120,7 @@ namespace cscover
                         Console.WriteLine("Unable to instrument " + assemblyFile + " due to assembly resolution error");
                     }
                 }
-                
+
                 // Execute the command.
                 Console.WriteLine("Executing command");
                 var process = Process.Start(new ProcessStartInfo
@@ -127,6 +136,8 @@ namespace cscover
                 // Restore assemblies.
                 foreach (var assemblyFile in extra)
                 {
+                    var assemblyFileWithoutExt = assemblyFile.Substring(0, assemblyFile.LastIndexOf("."));
+                    var assemblyExt = assemblyFile.Substring(assemblyFile.LastIndexOf(".") + 1);
                     if (!File.Exists(assemblyFile + ".bak"))
                         continue;
                     Console.WriteLine("Restoring " + assemblyFile);
@@ -138,9 +149,15 @@ namespace cscover
                             File.Move(assemblyFile + ".bak.mdb", assemblyFile + ".mdb");
                     }
                     catch (IOException) { }
+                    try
+                    {
+                        if (File.Exists(assemblyFileWithoutExt + "." + assemblyExt + ".pdb"))
+                            File.Move(assemblyFileWithoutExt + "." + assemblyExt + ".pdb", assemblyFileWithoutExt + ".pdb");
+                    }
+                    catch (IOException) { }
                 }
             }
-            
+
             // Generate report.
             using (var reader = new StreamReader(trackTemp))
             {
@@ -178,7 +195,7 @@ namespace cscover
             File.Delete(trackTemp);
             Console.WriteLine("Report saved to " + output);
         }
-        
+
         private struct ReportLine
         {
             public int StartLine { get; set; }
@@ -186,7 +203,7 @@ namespace cscover
             public string Document { get; set; }
         }
 
-        public static void ShowHelp (OptionSet p)
+        public static void ShowHelp(OptionSet p)
         {
             Console.WriteLine("Usage: cscover [OPTIONS]+ assembly1..assemblyN");
             Console.WriteLine();
