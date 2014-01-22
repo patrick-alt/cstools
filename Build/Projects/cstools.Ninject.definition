@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ExternalProject Name="Ninject">
+<ExternalProject Name="cstools.Ninject" Platforms="Linux,MacOS,Windows">
  
   <Binary
     Name="Ninject" 

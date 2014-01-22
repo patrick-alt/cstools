@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Name="cslint" Path="cslint" Type="Console">
+<Project Name="cslint" Path="cslint" Type="Console" Platforms="Linux,MacOS,Windows">
   <References>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Ninject" />
-    <Reference Include="StyleCop" />
+    <Reference Include="cstools.Ninject" />
+    <Reference Include="cstools.StyleCop" />
     <Reference Include="cslib" />
   </References>
   <Files>

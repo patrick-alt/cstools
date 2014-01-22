@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Name="cscover" Path="cscover" Type="Console">
+<Project Name="cscover" Path="cscover" Type="Console" Platforms="Linux,MacOS,Windows">
   <References>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Ninject" />
+    <Reference Include="cstools.Ninject" />
     <Reference Include="cslib" />
   </References>
   <Files>

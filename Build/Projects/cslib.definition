@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Name="cslib" Path="cslib" Type="Library">
+<Project Name="cslib" Path="cslib" Type="Library" Platforms="Linux,MacOS,Windows">
   <References>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Ninject" />
-    <Reference Include="StyleCop" />
+    <Reference Include="cstools.Ninject" />
+    <Reference Include="cstools.StyleCop" />
   </References>
   <Files>
     <Compile Include="CSharpLibraryNinjectModule.cs" />
