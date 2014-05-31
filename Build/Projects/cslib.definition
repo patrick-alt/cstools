@@ -9,6 +9,9 @@
     <Reference Include="cstools.Ninject" />
     <Reference Include="cstools.StyleCop" />
   </References>
+  <Services>
+    <Service Name="Default" />
+  </Services>
   <Files>
     <Compile Include="CSharpLibraryNinjectModule.cs" />
     <Compile Include="Implementations\BuiltinLinter.cs" />

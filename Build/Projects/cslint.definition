@@ -6,8 +6,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="cstools.Ninject" />
     <Reference Include="cstools.StyleCop" />
-    <Reference Include="cslib" />
   </References>
+  <Services>
+    <Service Name="Default">
+      <Requires>cslib/Default</Requires>
+      <InfersReference>False</InfersReference>
+    </Service>
+  </Services>
   <Files>
     <Compile Include="Program.cs" />
     <None Include="packages.config" />
