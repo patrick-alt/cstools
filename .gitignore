@@ -113,3 +113,4 @@ UpgradeLog*.XML
 *.csproj
 *.sln
 cs*.nuspec
+*.speccache
