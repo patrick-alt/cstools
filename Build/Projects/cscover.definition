@@ -11,6 +11,7 @@
     <Service Name="Default">
       <Requires>cslib/Default</Requires>
       <InfersReference>False</InfersReference>
+      <DefaultForRoot>True</DefaultForRoot>
     </Service>
   </Services>
   <Files>
