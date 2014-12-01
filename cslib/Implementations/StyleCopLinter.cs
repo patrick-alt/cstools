@@ -8,7 +8,9 @@ namespace cslib
     public class StyleCopLinter : ILinter
     {
         private readonly IProjectDiscovery m_ProjectDiscovery;
-    
+
+        private const string OutputFile = "StyleCopViolations.xml";
+
         public StyleCopLinter(
             IProjectDiscovery projectDiscovery)
         {
@@ -20,7 +22,7 @@ namespace cslib
             var file = results.FileName;
             
             // Start the StyleCop console.
-            var console = new StyleCopConsole(Environment.CurrentDirectory, true, null, null, true);
+            var console = new StyleCopConsole(Environment.CurrentDirectory, true, OutputFile, null, true);
             
             // Create the StyleCop configuration.
             var configuration = new Configuration(new string[] { "DEBUG" });
@@ -46,8 +48,11 @@ namespace cslib
             };
             EventHandler<ViolationEventArgs> violationEncountered = (sender, e) =>
             {
-                if (e.SourceCode.Path != Path.Combine(Environment.CurrentDirectory, file))
+                if (!String.Equals(e.SourceCode.Path, Path.Combine(Environment.CurrentDirectory, file), StringComparison.OrdinalIgnoreCase))
+                {
                     return;
+                }
+
                 var index = new LintIssueIndex
                 {
                     Name = e.Violation.Rule.Name,
@@ -73,6 +78,7 @@ namespace cslib
             // Finalise.
             console.OutputGenerated -= outputGenerated;
             console.ViolationEncountered -= violationEncountered;
+            console.Core.Environment.RemoveAnalysisResults(OutputFile);
         }
     }
 }
